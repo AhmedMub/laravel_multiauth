@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\AdminLogin;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,4 +22,25 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('user.home');
+
+
+//* Admin Login Routes
+Route::prefix('admin/')->name('admin.')->group(function () {
+
+    //this is for guest only
+    //& this to prevent admin from accessing login page after successfully authenticated, this is handled by guest middleware which is RedirectIfAuthenticated.php
+    Route::middleware(['guest:admin'])->group(function () {
+
+        Route::get('login', [AdminLogin::class, 'showAdminLoginForm'])->name('login');
+
+        Route::post('check', [AdminLogin::class, 'adminCheck'])->name('check');
+    });
+
+    Route::middleware(['auth:admin'])->group(function () {
+
+        Route::get('home', [AdminController::class, 'index'])->name('home');
+
+        Route::post('logout', [AdminLogin::class, 'logout'])->name('logout');
+    });
+});

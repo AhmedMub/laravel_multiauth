@@ -22,7 +22,14 @@ class RedirectIfAuthenticated
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
+
+            //* this for authenticated admins can not view login page after being authenticated
             if (Auth::guard($guard)->check()) {
+
+                if ($guard === 'admin') {
+                    return redirect()->route('admin.home');
+                }
+
                 return redirect(RouteServiceProvider::HOME);
             }
         }
