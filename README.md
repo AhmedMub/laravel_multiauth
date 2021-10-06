@@ -2,4 +2,4 @@
 
 ## About laravel_middlewares
 
-Laravel Middleware Multiple Admins "Testing"
+Laravel Multi authentication Functionality
